@@ -1,2 +1,2 @@
 # Learn-and-Think-More
-Live and prosper.
+Live long and prosper.
