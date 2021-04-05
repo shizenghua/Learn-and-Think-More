@@ -1,0 +1,109 @@
+## 一、目标
+
+今天的目标是某生鲜App的签名 **paramsMD5** ，抓个包先：
+
+![main](images/main.png)1:main
+
+###### Tip:
+
+新鲜热乎的 1.4.5
+
+## 二、步骤
+
+### 老规矩，上jadx
+
+![jadxdlf](images/jadxdlf.png)1:jadx
+
+纳尼…… 这个 **qihoo** 很眼熟，在Windows平台下是老熟人了，没想到现在混移动端了，它又冒出来了。
+
+怎么办？手脱是万万不行的，这辈子都不想手脱，还好我们有葫芦娃
+
+![hlw](images/hlw.png)1:hlw
+
+https://github.com/hluwa/FRIDA-DEXDump
+
+1. 默念一声"我想脱个壳"。
+2. 启动 APP。
+3. 启动 frida-server。
+4. python main.py。
+5. 默数三秒，脱好了。
+
+### 一堆Dex怎么找
+
+![dex](images/dex.png)1:dex
+
+脱完的Apk在哪里？ 兄弟，你太Native了，脱完就是Apk的那不是葫芦娃，那是金刚葫芦娃。
+
+面对这一堆Dex，咱们该怎么入手?
+
+#### 直接搜Dex文件？
+
+这是相当不靠谱的，Dex是中间文件，不是源码。
+
+#### 用jadx一个一个打开去找？
+
+有毅力，先把文件排个序，然后从大到小去一个一个用jadx打开。
+
+#### 还是jadx，不过这次是批量反编译
+
+```python
+import os, sys
+
+# python3.7 merge_dex.py ./file/ livedex
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3 :
+        print("start error")
+        sys.exit()
+
+    print(sys.argv[1], sys.argv[2])
+
+path = sys.argv[1] #文件夹目录
+files= os.listdir(path) #得到文件夹下的所有文件名称
+s = []
+for file in files: #遍历文件夹
+    if file.find("dex") > 0: ## 查找dex 文件
+        sh = '/Users/fenfei/Desktop/tool/jadx-1.2.0/bin/jadx -j 1 -r -d ' + sys.argv[2] + " " + path + file
+        print(sh)
+        os.system(sh)
+```
+
+跑一遍，这下才有意思，看到了熟悉的java代码
+
+![java](images/java.png)1:dex
+
+好了，这次从整个文件夹搜索 **paramsMD5**
+
+```bash
+find . -path '*/.svn*' -prune -o -type f -name "*.*" | xargs grep -nH -E -i "paramsMD5"
+./com/rt/market/fresh/a/g.java:214:            this.a.put("paramsMD5", b(a2));
+./com/rt/market/fresh/common/j.java:127:        aVar.put("paramsMD5", com.rt.market.fresh.a.g.b(a2));
+```
+
+结果很美丽
+
+![paramsmd5](images/paramsmd5.png)1:params
+
+再进入签名函数一看:
+
+![rc](images/rc.png)1:rc
+
+好吧，根本就没有再挂上心爱的Frida的兴致……
+
+## 三、总结
+
+方法要找，但是脏活累活也要干，实在没办法，一个一个文件打开去找也是能接受的，反正是带薪**
+
+![gg](images/gg.png)1:ff
+
+有钱没欲望才是低欲望，我们这种没钱没欲望的叫面对现实
+
+###### Tip:
+
+本文的目的只有一个就是学习更多的逆向技巧和思路，如果有人利用本文技术去进行非法商业获取利益带来的法律责任都是操作者自己承担，和本文以及作者没关系，本文涉及到的代码项目可以去 奋飞的朋友们 知识星球自取，欢迎加入知识星球一起学习探讨技术。有问题可以加我wx: fenfei331 讨论下。
+
+![100](images/ffzsxq.jpg)
+
+关注微信公众号，最新技术干货实时推送
+
+![100](images/ff330.png)
