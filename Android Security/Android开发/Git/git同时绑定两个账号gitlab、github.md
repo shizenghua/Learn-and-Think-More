@@ -1,34 +1,3 @@
-# Git Bash设置代理
-
-从GitHub clone代码速度比较慢，设置代理，（假设端口是1080）：
-
-```
-git config --global https.proxy http://127.0.0.1:1080
-git config --global https.proxy https://127.0.0.1:1080
-git config --global --unset http.proxy
-git config --global --unset https.proxy
-npm config delete proxy
-git config --global http.proxy 'socks5://127.0.0.1:1080'
-git config --global https.proxy 'socks5://127.0.0.1:1080'
-```
-
-
-
-
-
-# 执行ssh-add时出现Could not open a connection to your authentication agent
-
-若执行ssh-add /path/to/xxx.pem是出现这个错误:Could not open a connection to your authentication agent，则先执行如下命令即可：
-
-　　**ssh-agent bash**
-
-***
-更多关于ssh-agent的细节，可以用 man ssh-agent 来查看
-
-
-
-
-
 # git同时绑定两个账号gitlab、github
 
 url：https://blog.csdn.net/qq_33426324/article/details/102687113
@@ -102,9 +71,9 @@ Hi Ly9623! You’ve successfully authenticated, but GitHub does not provide shel
 取消全局配置：
 
 ```
-git config –global -l   //查看配置
-git config –global –unset user.name
-git config –global –unset user.email
+git config ––global -l   //查看配置
+git config ––global –unset user.name
+git config ––global –unset user.email
 ```
 
 在clone项目存放的目录中，打开git bush，单独设置每个账户的 username/usermail
@@ -117,3 +86,4 @@ git config user.name “用户名”
 新建text.txt文档，push至github，输入用户名和密码，上传成功
 
 ![在这里插入图片描述](images/20191022173945624.png)
+
